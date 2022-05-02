@@ -1,210 +1,186 @@
 <?php
 require 'dbhclass.php';
-Class register extends dbh {
+class register extends dbh
+{
     //check si les inputs ont une valeur
-    protected function CheckEmpy($login,$prenom,$nom,$password,$repassword,$email){
-        if (!empty($login) && !empty($prenom) &&!empty($nom) &&  !empty($password) &&!empty($repassword) &&!empty($email))
-        {
+    protected function CheckEmpy($login, $prenom, $nom, $password, $repassword, $email)
+    {
+        if (!empty($login) && !empty($prenom) && !empty($nom) &&  !empty($password) && !empty($repassword) && !empty($email)) {
             return true;
-
-
-        }
-        else
-        {
+        } else {
             return false;
         }
-
     }
 
-    
 
-    public function userRegister($login,$prenom,$nom,$password,$repassword,$email) {
+
+    public function userRegister($login, $prenom, $nom, $password, $repassword, $email)
+    {
         // gestion des erreurs du formulaire
-        if ( $this -> CheckEmpy($login,$prenom,$nom,$password,$repassword,$email)) {
-            
+        if ($this->CheckEmpy($login, $prenom, $nom, $password, $repassword, $email)) {
+
 
             $errors = array();
 
-            if ($password !== $repassword)
-            {
+            if ($password !== $repassword) {
                 $errors[] = 'Password incorrect';
-
             }
 
-            if ( !filter_var($email, FILTER_VALIDATE_EMAIL)) 
-            {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors = 'Veuillez entrez une adresse e-mail correcte';
-
-
             }
 
             $sql = 'SELECT email FROM utilisateurs where email = ? ';
 
             $query = $this->connection->prepare($sql);
 
-            $query -> execute([ $email ]);
+            $query->execute([$email]);
 
             $emails = $query->FetchAll();
 
 
             if (count($emails) > 0) {
-                $errors[] = 'Email déja prise'; 
+                $errors[] = 'Email déja prise';
             }
 
             $sql = 'SELECT login FROM utilisateurs where login = ? ';
 
             $query = $this->connection->prepare($sql);
 
-            $query -> execute([ $login ]);
+            $query->execute([$login]);
 
             $logins = $query->FetchAll();
 
 
             if (count($logins) > 0) {
-                $errors[] = 'login déja pris'; 
+                $errors[] = 'login déja pris';
             }
 
 
-           if(count($errors) > 0) {
-               foreach($errors as $error) {
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
                     echo $error . '<br><br>';
-               }
-           } else {
-               $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
+                }
+            } else {
+                $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
 
-               $sql  = 'insert into utilisateurs (login,password,email,prenom,nom) values (?,?,?,?,?);'; 
+                $sql  = 'insert into utilisateurs (login,password,email,prenom,nom) values (?,?,?,?,?);';
 
 
-               $query = $this->connection->prepare($sql);
+                $query = $this->connection->prepare($sql);
 
-               $query->execute([ $login,$hashedPwd,$email,$prenom,$nom]);
+                $query->execute([$login, $hashedPwd, $email, $prenom, $nom]);
 
-               echo 'Vous êtes inscrit';
-           }
-
-        }
-
-        else
-
-        {
+                echo 'Vous êtes inscrit';
+            }
+        } else {
             echo 'Remplissez tout les champs';
         }
-
     }
 
-    public function userUpdate($login,$prenom,$nom,$password,$repassword,$email) {
+    public function userUpdate($login, $prenom, $nom, $password, $repassword, $email)
+    {
         // gestion des erreurs du formulaire
-        if ( $this -> CheckEmpy($login,$prenom,$nom,$password,$repassword,$email)) {
-            
+        if ($this->CheckEmpy($login, $prenom, $nom, $password, $repassword, $email)) {
+
 
             $errors = array();
 
-            if ($password !== $repassword)
-            {
+            if ($password !== $repassword) {
                 $errors[] = 'Password incorrect';
-
             }
 
-            if ( !filter_var($email, FILTER_VALIDATE_EMAIL)) 
-            {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors = 'Veuillez entrez une adresse e-mail correcte';
-
-
             }
 
             $sql = 'SELECT email FROM utilisateurs where email = ? ';
 
             $query = $this->connection->prepare($sql);
 
-            $query -> execute([ $email ]);
+            $query->execute([$email]);
 
             $emails = $query->FetchAll();
 
 
             if (count($emails) > 0) {
-                $errors[] = 'Email déja prise'; 
+                $errors[] = 'Email déja prise';
             }
 
             $sql = 'SELECT login FROM utilisateurs where login = ? ';
 
             $query = $this->connection->prepare($sql);
 
-            $query -> execute([ $login ]);
+            $query->execute([$login]);
 
             $logins = $query->FetchAll();
 
 
             if (count($logins) > 0) {
-                $errors[] = 'login déja pris'; 
+                $errors[] = 'login déja pris';
             }
 
 
-           if(count($errors) > 0) {
-               foreach($errors as $error) {
+            if (count($errors) > 0) {
+                foreach ($errors as $error) {
                     echo $error . '<br><br>';
-               }
-           } else {
+                }
+            } else {
 
-            $login = trim(htmlspecialchars($_POST['login']));
-            $prenom = trim(htmlspecialchars($_POST['prenom']));
-            $nom = trim(htmlspecialchars($_POST['nom']));
-            $password = trim($_POST['password']);
-            $repassword = trim($_POST['repassword']);
-            $email = trim(htmlspecialchars($_POST['email']));
-            $id = $_SESSION['id'];
-
-
-           
-              
-               $password = password_hash($password, PASSWORD_DEFAULT);
-
-               $sql  = "UPDATE utilisateurs SET login=?,password=?,email=?,prenom=?,nom=? WHERE id=?"; 
-
-
-               $query = $this->connection->prepare($sql);
-
-               $query->execute(array(
-                   $login,$password,$email,$prenom,$nom,$id
-
-
-               ));
-           
-
-            // if(isset($_SESSION['id'])){
-            //     $request  = $this->connection->prepare("SELECT * FROM utilisateurs WHERE id = ?"); // requête
-            //     $request->execute(array($_SESSION['id']));
-            //     $user = $request->fetch();
-
-              
-            //         $stmt = $this->connection->prepare("UPDATE utilisateurs SET login = ?,password = ? , email = ? , prenom = ? ,nom = ?  WHERE id = ? ");
-            //         $stmt->execute(array(
-            //             $login, $_SESSION['id'],
-            //             $password, $_SESSION['id'],
-            //             $email, $_SESSION['id'],
-            //             $prenom, $_SESSION['id'],
-            //             $nom, $_SESSION['id']
-
-            //     ));
-            //         header('Location: profil.php?id=' . $_SESSION['id']);
-                
-
-
-            // }
-                
+                $login = trim(htmlspecialchars($_POST['login']));
+                $prenom = trim(htmlspecialchars($_POST['prenom']));
+                $nom = trim(htmlspecialchars($_POST['nom']));
+                $password = trim($_POST['password']);
+                $repassword = trim($_POST['repassword']);
+                $email = trim(htmlspecialchars($_POST['email']));
+                $id = $_SESSION['id'];
 
 
 
-               echo 'Vous avez modifiez votre profil';
-           }
 
-        }
+                $password = password_hash($password, PASSWORD_DEFAULT);
 
-        else
+                $sql  = "UPDATE utilisateurs SET login=?,password=?,email=?,prenom=?,nom=? WHERE id=?";
 
-        {
+
+                $query = $this->connection->prepare($sql);
+
+                $query->execute(array(
+                    $login, $password, $email, $prenom, $nom, $id
+
+
+                ));
+
+
+                // if(isset($_SESSION['id'])){
+                //     $request  = $this->connection->prepare("SELECT * FROM utilisateurs WHERE id = ?"); // requête
+                //     $request->execute(array($_SESSION['id']));
+                //     $user = $request->fetch();
+
+
+                //         $stmt = $this->connection->prepare("UPDATE utilisateurs SET login = ?,password = ? , email = ? , prenom = ? ,nom = ?  WHERE id = ? ");
+                //         $stmt->execute(array(
+                //             $login, $_SESSION['id'],
+                //             $password, $_SESSION['id'],
+                //             $email, $_SESSION['id'],
+                //             $prenom, $_SESSION['id'],
+                //             $nom, $_SESSION['id']
+
+                //     ));
+                //         header('Location: profil.php?id=' . $_SESSION['id']);
+
+
+
+                // }
+
+
+
+
+                echo 'Vous avez modifiez votre profil';
+            }
+        } else {
             echo 'Remplissez tout les champs';
         }
-
     }
 
 
@@ -238,105 +214,91 @@ Class register extends dbh {
     // }
 
 
-    
-
-    public function userlog($login,$email,$password) {
-        try
-       {
-          $stmt = $this->connection->prepare("SELECT * FROM utilisateurs WHERE login=:login OR email=:email LIMIT 1"); // préparation requete
-          $stmt->execute(array(':login'=>$login, ':email'=>$email)); 
-          $userRow=$stmt->fetch(PDO::FETCH_ASSOC);
-          if($stmt->rowCount() > 0)
-          {
-             if(password_verify($password, $userRow['password']))
-             {
-                $_SESSION['login'] = $userRow['login'];
-                $_SESSION['email'] = $userRow['email'];
-                $_SESSION['prenom'] = $userRow['prenom'];
-                $_SESSION['nom'] = $userRow['nom'];
-                $_SESSION['id'] = $userRow['id'];
 
 
-                
-                return true;
-             }
-             else
-             {
-                return false;
-             }
-          }
-       }
-       catch(PDOException $e)
-       {
-           echo $e->getMessage();
-       }
-   }
- 
-   public function is_loggedin()
-   {
-      if(isset($_SESSION['login']))
-      {
-         return true;
-      }
-   }
- 
-   public function redirect($url)
-   {
-       header("Location: $url");
-   }
- 
-   public function logout()
-   {
+    public function userlog($login, $email, $password)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM utilisateurs WHERE login=:login OR email=:email LIMIT 1"); // préparation requete
+            $stmt->execute(array(':login' => $login, ':email' => $email));
+            $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() > 0) {
+                if (password_verify($password, $userRow['password'])) {
+                    $_SESSION['login'] = $userRow['login'];
+                    $_SESSION['email'] = $userRow['email'];
+                    $_SESSION['prenom'] = $userRow['prenom'];
+                    $_SESSION['nom'] = $userRow['nom'];
+                    $_SESSION['id'] = $userRow['id'];
+
+
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function is_loggedin()
+    {
+        if (isset($_SESSION['login'])) {
+            return true;
+        }
+    }
+
+    public function redirect($url)
+    {
+        header("Location: $url");
+    }
+
+    public function logout()
+    {
         session_destroy();
         unset($_SESSION['login']);
         return true;
-   }
+    }
 
 
-   public function  GetAllInfosPdo($login)
-    {         
+    public function  GetAllInfosPdo($login)
+    {
         // $AllInfos =         var_dump($_SESSION);
-       
+
         try {
 
             $stmt = $this->connection->prepare("SELECT * FROM utilisateurs WHERE login = :login");
 
-            $stmt->bindValue(':login',$login);
+            $stmt->bindValue(':login', $login);
 
             $stmt->execute();
 
             $infos = $stmt->fetchAll();
 
             // On affiche chaque recette une à une
-        foreach ($infos as $info) {
-    ?>
+            foreach ($infos as $info) {
+?>
 
-        <td><?php echo $info['login'] .'<br>'; ?></td>
-        <td><?php echo $info['prenom'].'<br>'; ?></td>
-        <td><?php echo $info['nom']. '<br>'; ?></td>
-        <td><?php echo $info['email']; ?></td>
-        
-        
-    <?php
-    }
-   
+                <td><?php echo $info['login'] . '<br>'; ?></td>
+                <td><?php echo $info['prenom'] . '<br>'; ?></td>
+                <td><?php echo $info['nom'] . '<br>'; ?></td>
+                <td><?php echo $info['email']; ?></td>
+
+
+<?php
+            }
+
             return $stmt;
-
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
-        
     }
 
 
-   public function addarticle(){
-
-
-
-
-   }
-
+    public function addarticle()
+    {
+    }
 }
 
 
@@ -363,7 +325,7 @@ Class register extends dbh {
 //     }
 
 //     public function setUser($login,$email,$password,$prenom,$nom ) {
-        
+
 //         $stmt = $this->connection->prepare('INSERT INTO utilisateurs (login,email,password,nom,prenom) VALUES(?,?,?,?,?)');
 
 //         $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
