@@ -35,7 +35,7 @@ var_dump($_POST);
         <div class="col-md-6">
           <div class="form-group">
             <label for="Description">Description</label>
-            <input type="text" class="form-control" placeholder="prenom" name="description" id="first">
+            <textarea type="text" class="form-control" placeholder="prenom" name="description" id="first" maxlength="255"></textarea>
           </div>
         </div>
         <!--  col-md-6   -->
@@ -150,15 +150,16 @@ $produits->paginglink($query, $records_per_page);
 foreach ($data as $produit) {
   // var_dump($produit);
   ?>
-  
-  <div class="card mb-3">
-  <img src="images/<?= $produit['image'] ?>" class="card-img-top" alt="...">
+  <div class="d-flex justify-content-center">
+  <div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="images/<?= $produit['image'] ?>" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">Card title</h5>
-    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
 </div>
+  </div>
     
     <?php
 }

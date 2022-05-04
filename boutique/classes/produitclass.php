@@ -4,9 +4,7 @@ class Produits extends dbh
 {
 
 
-    public function addprod()
-    {
-    }
+   
 
     // public function readAll()
     // {
@@ -78,7 +76,7 @@ class Produits extends dbh
         var_dump($query);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
-            $i = 0;
+            
             $data = $stmt->fetchAll();
             return $data;
 
@@ -91,12 +89,12 @@ class Produits extends dbh
     public function pagination($query, $record_per_page)
     {
 
-        $starting_position = 0;
-        if (isset($_GET["page_no"])) {
+        $starting_position = 0; 
+        if (isset($_GET["page_no"])) { 
             $starting_position =
-                ($_GET["page_no"] - 1) * $record_per_page;
+                ($_GET["page_no"] - 1) * $record_per_page; // page 
         }
-        $query2 = $query . " LIMIT $starting_position,$record_per_page";
+        $query2 = $query . " LIMIT $starting_position,$record_per_page ";
         return $query2;
     }
 
@@ -106,7 +104,7 @@ class Produits extends dbh
     public function paginglink($query, $records_per_page)
     {
 
-        $self = $_SERVER['PHP_SELF'];
+        $self = $_SERVER['PHP_SELF']; //  est égal a 'boutique/produit.php?page_no=2'
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
@@ -118,22 +116,22 @@ class Produits extends dbh
                     <td colspan="3"><?php
                                     $total_no_of_pages = ceil($total_no_of_records / $records_per_page);
                                     $current_page = 1;
-                                    if (isset($_GET["page_no"])) {
+                                    if (isset($_GET["page_no"])) {   // 
                                         $current_page = $_GET["page_no"];
                                     }
-                                    if ($current_page != 1) {
+                                    if ($current_page != 1) { // page précédente
                                         $previous = $current_page - 1;
                                         echo "<a href='" . $self . "?page_no=1'>First</a>&nbsp;&nbsp;";
                                         echo "<a href='" . $self . "?page_no=" . $previous . "'>Previous</a>&nbsp;&nbsp;";
                                     }
-                                    for ($i = 1; $i <= $total_no_of_pages; $i++) {
+                                    for ($i = 1; $i <= $total_no_of_pages; $i++) { // boucle pour affichage du nombre de pages
                                         if ($i == $current_page) {
                                             echo "<strong><a href='" . $self . "?page_no=" . $i . "' style='color:red;text-decoration:none'>" . $i . "</a></strong>&nbsp;&nbsp;";
                                         } else {
                                             echo "<a href='" . $self . "?page_no=" . $i . "'>" . $i . "</a>&nbsp;&nbsp;";
                                         }
                                     }
-                                    if ($current_page != $total_no_of_pages) {
+                                    if ($current_page != $total_no_of_pages) { // page suivante
                                         $next = $current_page + 1;
                                         echo "<a href='" . $self . "?page_no=" . $next . "'>Next</a>&nbsp;&nbsp;";
                                         echo "<a href='" . $self . "?page_no=" . $total_no_of_pages . "'>Last</a>&nbsp;&nbsp;";
@@ -160,6 +158,10 @@ class Produits extends dbh
 
 
 
+
+                    if(strlen($description) > 255) {
+                        echo 'description trop longue';
+                    }
 
 
                     $sql = 'SELECT nom FROM produits where nom = ? ';
@@ -197,7 +199,7 @@ class Produits extends dbh
 
                             $files_destination = 'images/' . $file_names;
                             $files_tmpname = $_FILES['fichier']['tmp_name'];
-                            $extension_autorisees =  array('.jpeg', '.pnj', '.png', '.jpg');
+                            $extension_autorisees =  array('.jpeg', '.pnj', '.png', '.jpg','.webp');
 
 
 

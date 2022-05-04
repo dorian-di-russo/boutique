@@ -171,6 +171,44 @@ class Admin
     }
 
 
+    public function getAllProd()
+    {
+        // $sql = 'SELECT * FROM categories order by nom asc';
+        // $query = $this->connection->query($sql);
+        // $categories = $query->fetchAll();
+        // return $categories;
+
+        $getProd = $this->connection->prepare("select  * FROM produits ORDER BY nom asc");
+        $getProd->execute();
+        $categories = $getProd->fetchAll();
+        $idr = 'id';
+        $id_categorie = 'id_categorie';
+        $nomr = 'nom';
+
+
+
+        echo "<table class='table table-dark'>";
+        if ($categories) {
+            foreach ($categories as $categorie) {
+                echo "<br>";
+                echo "<tr><td>";
+
+
+
+                echo "<td>Id categorie: $categorie[$id_categorie]<br></td>";
+                echo "<td>id : $categorie[$idr]<br></td>";
+                echo "<td>Nom: $categorie[$nomr]<br></td>";
+
+                echo "</tr>";
+            }
+            echo "</table>";
+        } else {
+            // Whatever your requirement is to handle the no user case, do it here.
+            echo 'Erreur : pas de catégories.';
+        }
+    }
+
+
 
     public function delete($id = null, $table = 'utilisateurs')
     {
