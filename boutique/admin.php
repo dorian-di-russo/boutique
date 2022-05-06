@@ -2,7 +2,10 @@
 session_start();
 
 require 'classes/adminclass.php';
-
+if(!$_SESSION === true)
+{
+    header ('location: index.php');
+}
 
 ?>
 

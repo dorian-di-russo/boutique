@@ -1,57 +1,34 @@
 <?php
+if(isset($_POST['prix']) && !empty($_POST['prix'])) {
+  require_once('vendor/autoload.php');
+  $prix = (float)$_POST['prix'];
+  \Stripe\Stripe::setApiKey('sk_test_51KwArZADaBeUb39AEhnVEdGwpkQi9hV2IdQxeehixvKGpIL7CHHTYdJI7BWHe4g1hIQJosFdS6tGZjpyCM002gER004ZPaXy4e');
 
-require 'classes/panierclass.php';
-require 'classes/produitclass.php';
+
+ $intent = \Stripe\PaymentIntent::create([
+    'amount' => $prix*100, // prix
+    'currency' => 'eur', //
+ ]);
+ echo '<pre>';
+ var_dump($intent);
+ echo '<pre>';
+
+}
 
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commande</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-
-
-<?php
-$query = "SELECT * FROM produits";
-$records_per_page = 3;
-
-$produits = new Produits();
-
-$newquery = $produits->pagination($query, $records_per_page);
-$data = $produits->dataview($newquery);
-$produits->paginglink($query, $records_per_page);
-$page = $_GET['page'];
-foreach ($data as $produit) {
-    // var_dump($produit);
-    ?>
-    <div class="d-flex justify-content-center">
-    <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="images/<?= $produit['image'] ?>" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title"><?= $produit['nom'] ?></h5>
-      <p class="card-text"><?= $produit['description'] ?></p> 
-          <a href=''>commander</a>
-    </div>
-  </div>
-    </div>
-      
-      <?php
-  }
-  
-  
-  
-    echo  "<a href='commande.php?id={$produit['id']}"
-    ?>
-
-
-    
+  <form action="" method="post">
+      <label for="number">number</label>
+      <input type="number" name="prix">
+      <input type="submit" value="envoyer">
+  </form>
 </body>
 </html>

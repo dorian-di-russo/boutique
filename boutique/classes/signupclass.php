@@ -2,7 +2,7 @@
 require 'dbhclass.php';
 class register extends dbh
 {
-    //check si les inputs ont une valeur
+    
     protected function CheckEmpy($login, $prenom, $nom, $password, $repassword, $email)
     {
         if (!empty($login) && !empty($prenom) && !empty($nom) &&  !empty($password) && !empty($repassword) && !empty($email)) {
@@ -30,14 +30,14 @@ class register extends dbh
                 $errors = 'Veuillez entrez une adresse e-mail correcte';
             }
 
+            
+            
+            
+            
             $sql = 'SELECT email FROM utilisateurs where email = ? ';
-
             $query = $this->connection->prepare($sql);
-
             $query->execute([$email]);
-
             $emails = $query->FetchAll();
-
 
             if (count($emails) > 0) {
                 $errors[] = 'Email déja prise';
@@ -50,32 +50,30 @@ class register extends dbh
             $query->execute([$login]);
 
             $logins = $query->FetchAll();
-
-
             if (count($logins) > 0) {
                 $errors[] = 'login déja pris';
             }
-
-
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
                     echo $error . '<br><br>';
                 }
             } else {
                 $hashedPwd = password_hash($password, PASSWORD_DEFAULT);
-
                 $sql  = 'insert into utilisateurs (login,password,email,prenom,nom) values (?,?,?,?,?);';
-
-
                 $query = $this->connection->prepare($sql);
-
                 $query->execute([$login, $hashedPwd, $email, $prenom, $nom]);
-
                 echo 'Vous êtes inscrit';
+
+
+
             }
         } else {
             echo 'Remplissez tout les champs';
         }
+            
+
+
+
     }
 
     public function userUpdate($login, $prenom, $nom, $password, $repassword, $email)
@@ -278,6 +276,7 @@ class register extends dbh
 
             // On affiche chaque recette une à une
             foreach ($infos as $info) {
+
 ?>
 
                 <td><?php echo $info['login'] . '<br>'; ?></td>

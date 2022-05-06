@@ -40,6 +40,7 @@ try {
   <div class="container">
     <form method="POST">
       <h2>Inscription</h2>
+      <link rel="stylesheet" href="https://buy.stripe.com/test_bIY4iy39Ia1X3fi000">
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">

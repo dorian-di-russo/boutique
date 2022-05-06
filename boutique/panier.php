@@ -1,10 +1,20 @@
 <?php
 require 'require/header.php';
-if (isset($_GET['del'])) {
-    $panier->del($_GET['del']);
+if(!$_SESSION === true)
+{
+    header ('location: index.php');
 }
-var_dump($_SESSION);
+
+if (isset($_GET['delPanier'])) {
+    echo"on est ici";
+    $panier->del($_GET['delPanier']);
+}
+
+
+  
+// var_dump($_SESSION);
 ?>
+<link rel="stylesheet" href="panier.css">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -13,7 +23,7 @@ var_dump($_SESSION);
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="index.html">Simple Ecommerce</a>
+        <!-- <a class="navbar-brand" href="index.html">Simple Ecommerce</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,7 +45,7 @@ var_dump($_SESSION);
                 <li class="nav-item">
                     <a class="nav-link" href="contact.html">Contact</a>
                 </li>
-            </ul>
+            </ul> -->
 
             <form class="form-inline my-2 my-lg-0">
                 <div class="input-group input-group-sm">
@@ -83,17 +93,20 @@ var_dump($_SESSION);
 
                         $products = $db->request('SELECT * FROM produits WHERE id IN (' . implode(',', $ids) . ')');
                     }
-                    var_dump($products);
+                    // var_dump($products);
+                    
                     foreach ($products as $product) :
+                      
                     ?>
                         <tbody>
+                        <form action="" method="post" enctype="multipart/form">
                             <tr>
-                                <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                                <td>Product Name Dada</td>
+                                <td><img  class="img"   src="images/<?= $product->image; ?>" /> </td>
+                                <td><?= $product->nom; ?></td>
                                 <td>In stock</td>
                                 <td><p class="form-control" type="text" value=" ?>" ><?= $_SESSION['panier'][$product->id]?></p></td>
-                                <td class="text-right"><?= number_format($product->prix, 2, ',', '') . " " . "€"; ?></td>
-                                <td class="text-right"> <a href="panier.php?delPanier=<?= $product->id; ?>"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></a> </td>
+                                <td  class="text-right"><?= number_format($product->prix, 2, ',', '') . " " . "€"; ?></td>
+                                <td class="text-right"><a href="panier.php?delPanier=<?=$product->id;?>"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></a> </td>
                             </tr>
                         <?php endforeach; ?>
 
@@ -129,10 +142,11 @@ var_dump($_SESSION);
         <div class="col mb-2">
             <div class="row">
                 <div class="col-sm-12  col-md-6">
-                    <button class="btn btn-block btn-light">Continue Shopping</button>
+                    <button class="btn btn-block btn-light"> <a href="ajoutproduit.php"> Continue Shopping</a></button>
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
-                    <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                    <button name="submit" type="submit"class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                    </form>
                 </div>
             </div>
         </div>

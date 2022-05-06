@@ -1,6 +1,6 @@
 <?php
 
-class panier {
+class Panier {
 
     private $db;
 
@@ -17,10 +17,39 @@ class panier {
             $this->del($_GET['delPanier']); // 
         }
 
+
+
         $this->db = $db;
 
 
+
+
+
     }
+
+    
+
+    
+
+
+
+    // public function checkout($products,$nom,$description,$prix){
+
+    //     foreach($products as $product){
+
+    //     $sql = 'INSERT INTO `produits`( `nom`, `description`, `prix`, ) VALUES (:nom,:description,:prix)';
+    //                     $query = $this->db->prepare($sql);
+
+    //                     $query->execute(array(
+    //                         'nom' => $nom,
+    //                         'description' => $description,
+    //                         'prix' => $prix
+    //                     ));
+
+    //                 }
+
+    // }
+    
 
     public function sum(){
 
@@ -48,6 +77,7 @@ class panier {
 
     public function add ($product_id){
 
+
         if(isset($_SESSION['panier'][$product_id])){
             $_SESSION['panier'][$product_id]++; // incrémentation pour gérer quantité 
         }else{
@@ -60,6 +90,7 @@ class panier {
 
 
     public function del($product_id){
+        var_dump($product_id);
         unset($_SESSION['panier'][$product_id]); // retirer objet du panier
     }
 

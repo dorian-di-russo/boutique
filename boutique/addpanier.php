@@ -13,5 +13,5 @@ if (isset($_GET['id'])) {
     // var_dump($product);
 } else {
     $json['message'] = "Vous n'avez pas choisi de produits";
-}
+} 
 ?>

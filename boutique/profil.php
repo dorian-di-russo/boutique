@@ -2,14 +2,15 @@
 session_start();
 require 'classes/signupclass.php';
 var_dump($_SESSION);
-var_dump($_POST);
-if(!$_SESSION === true)
+// var_dump($_POST);
+if(!$_SESSION['login'] === true)
 {
     header ('location: index.php');
 }
+
 $login = $_SESSION['login'];
 $info = new register();
-$info->GetAllInfosPdo($login);
+
 
 
 try {
@@ -43,6 +44,29 @@ try {
 </head>
 
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Acceuil <span class="sr-only"></span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Produit</a>
+      </li>
+      <li class="nav-item">
+  
+       
+
+        <a class="nav-link" href="logout.php">Déconnexion</a>
+      </li>
+      
+    </ul>
+  </div>
+</nav>
   <div class="container">
     <form method="POST">
       <h2>Profil</h2>
